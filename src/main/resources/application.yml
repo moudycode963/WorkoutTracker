@@ -1,0 +1,24 @@
+server:
+  port: 8081  # Wir ziehen um auf 8081
+
+spring:
+  datasource:
+    # Die Verbindung zu Docker-Container
+    url: jdbc:mariadb://localhost:3306/workoutdb
+    username: root
+    password: root
+    driver-class-name: org.mariadb.jdbc.Driver
+
+  jpa:
+    hibernate:
+      # update = Erstellt Tabellen automatisch passend zu deinen Java-Klassen
+      ddl-auto: create
+    # Zeigt dir das SQL in der Konsole an (zum Lernen super!)
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+
+  thymeleaf:
+    # Cache aus, damit du HTML-�nderungen sofort siehst (nur f�r Dev!)
+    cache: false

@@ -1,0 +1,18 @@
+version: '3.8'  # Die Version der Docker-Sprache
+
+services:       # Hier listen wir alle Container auf, die wir brauchen
+  db:           # Unser Name für den Dienst (beliebig, z.B. "database" oder "db")
+    image: mariadb:latest           # Welches Image aus dem Internet?
+    container_name: workout-db      # Wie soll der Container heißen?
+    restart: always                 # Startet automatisch neu, wenn PC neustartet!
+    ports:
+      - "3306:3306"                 # Türsteher: Leite PC-Port 3306 auf Container-Port 3306
+    environment:                    # Umgebungsvariablen (Passwörter etc.)
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: workoutdb
+    volumes:                        # WICHTIG: Das Langzeitgedächtnis!
+      - db_data:/var/lib/mysql      # Speichere die DB-Daten in einem sicheren Docker-Bereich
+
+# Hier definieren wir den Speicherbereich
+volumes:
+  db_data:
