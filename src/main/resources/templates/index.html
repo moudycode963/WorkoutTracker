@@ -28,6 +28,11 @@
                     <td th:text="${workout.date}">2025-01-01</td>
                     <td th:text="${workout.title}">Beispiel</td>
                     <td th:text="${workout.notes}">Notiz</td>
+                    <td>
+                        <a th:href="@{/deleteWorkout/{id}(id=${workout.id})}"
+                           class="btn btn-danger btn-sm"
+                           onclick="return confirm('Wirklich löschen?');">🗑️ Löschen</a>
+                    </td>
                 </tr>
                 <tr th:if="${workouts}">
                     <td colspan="3" class="text-center text-muted p-3">

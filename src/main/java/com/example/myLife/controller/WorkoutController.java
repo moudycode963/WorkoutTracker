@@ -6,6 +6,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute; // <--- DIESER IMPORT FEHLTE!
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 
 import java.time.LocalDate;
@@ -50,6 +51,22 @@ public class WorkoutController {
     public String createDemoData() {
         Workout w1 = new Workout("Push Day", LocalDate.now(), "Gutes Training!");
         workoutRepository.save(w1);
+        return "redirect:/";
+    }
+
+    // ---------------------------------------------------------
+    // DELETE: Löschen eines Workouts
+    // ---------------------------------------------------------
+
+    // Die URL sieht so aus: /deleteWorkout/5
+    // {id} ist ein Platzhalter für die Nummer
+    @GetMapping("/deleteWorkout/{id}")
+    public String deleteWorkout(@PathVariable(value = "id") Long id) {
+
+        // 1. Der Business-Logik sagen: "Lösch das Ding mit Nummer X"
+        this.workoutRepository.deleteById(id);
+
+        // 2. Den Nutzer zurück zur Liste schicken (Refresh)
         return "redirect:/";
     }
 }
