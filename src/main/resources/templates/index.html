@@ -29,6 +29,7 @@
                     <td th:text="${workout.title}">Beispiel</td>
                     <td th:text="${workout.notes}">Notiz</td>
                     <td>
+                        <a th:href="@{/showUpdateForm/{id}(id=${workout.id})}" class="btn btn-warning btn-sm">✏️ Bearbeiten</a>
                         <a th:href="@{/deleteWorkout/{id}(id=${workout.id})}"
                            class="btn btn-danger btn-sm"
                            onclick="return confirm('Wirklich löschen?');">🗑️ Löschen</a>

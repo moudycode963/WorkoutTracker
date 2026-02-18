@@ -69,4 +69,22 @@ public class WorkoutController {
         // 2. Den Nutzer zurück zur Liste schicken (Refresh)
         return "redirect:/";
     }
+
+    // ---------------------------------------------------------
+    // UPDATE: Formular zum Bearbeiten anzeigen
+    // ---------------------------------------------------------
+    @GetMapping("/showUpdateForm/{id}")
+    public String showUpdateForm(@PathVariable(value = "id") Long id, Model model) {
+
+        // 1. Such das Workout in der DB (oder wirf einen Fehler, wenn nicht da)
+        Workout workout = workoutRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Ungültige Workout Id:" + id));
+
+        // 2. Pack das GEFUNDENE Workout auf den Tisch (in das Model)
+        // Dadurch sind die Felder im HTML schon vorausgefüllt!
+        model.addAttribute("workout", workout);
+
+        // 3. Zeige dasselbe Formular wie beim Erstellen
+        return "new_workout";
+    }
 }
