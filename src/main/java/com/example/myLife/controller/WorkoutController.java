@@ -1,6 +1,8 @@
 package com.example.myLife.controller;
 
+import com.example.myLife.model.Exercise;
 import com.example.myLife.model.Workout;
+import com.example.myLife.repository.ExerciseRepository;
 import com.example.myLife.repository.WorkoutRepository;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -16,10 +18,12 @@ import java.util.List;
 public class WorkoutController {
 
     private final WorkoutRepository workoutRepository;
+    private final ExerciseRepository exerciseRepository;
 
     // Konstruktor-Injektion
-    public WorkoutController(WorkoutRepository workoutRepository) {
+    public WorkoutController(WorkoutRepository workoutRepository, ExerciseRepository exerciseRepository) {
         this.workoutRepository = workoutRepository;
+        this.exerciseRepository = exerciseRepository;
     }
 
     // 1. Alle Workouts anzeigen
@@ -86,5 +90,43 @@ public class WorkoutController {
 
         // 3. Zeige dasselbe Formular wie beim Erstellen
         return "new_workout";
+    }
+
+    // ---------------------------------------------------------
+    // DETAIL-ANSICHT & ÜBUNGEN
+    // ---------------------------------------------------------
+
+    // 1. Zeige die Details eines Workouts + Liste der Übungen
+    @PostMapping("/workout/{id}/addExercise")
+    public String addExerciseToWorkout(@PathVariable(value = "id") Long id,
+                                       @ModelAttribute("newExercise") Exercise exercise) {
+
+        // 1. Hole das zugehörige Workout
+        Workout workout = workoutRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Invalid workout Id:" + id));
+
+        // 2. WICHTIG: Stelle sicher, dass Spring weiß, dass dies eine NEUE Übung ist!
+        // Wir erzwingen, dass die ID null ist, bevor wir speichern.
+        exercise.setId(null);
+
+        // 3. Verknüpfen
+        exercise.setWorkout(workout);
+
+        // 4. Speichern
+        exerciseRepository.save(exercise);
+
+        return "redirect:/workout/" + id;
+    }
+    // DIESE METHODE MUSS DA SEIN, DAMIT /workout/1 FUNKTIONIERT
+    @GetMapping("/workout/{id}")
+    public String showWorkoutDetails(@PathVariable(value = "id") Long id, Model model) {
+
+        Workout workout = workoutRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Invalid workout Id:" + id));
+
+        model.addAttribute("workout", workout);
+        model.addAttribute("newExercise", new Exercise());
+
+        return "workout_details";
     }
 }

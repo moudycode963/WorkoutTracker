@@ -1,6 +1,8 @@
 package com.example.myLife.model;
 import jakarta.persistence.*; // Wichtig: jakarta.*, nicht javax.* (in neuen Spring Versionen)
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity // Sagt Spring: "Mach aus dieser Klasse eine Datenbank-Tabelle!"
 @Table(name = "workouts") // (Optional) Wir benennen die Tabelle explizit "workouts" (Mehrzahl)
@@ -45,4 +47,20 @@ public class Workout {
 
     public String getNotes() { return notes; }
     public void setNotes(String notes) { this.notes = notes; }
+
+    // ... deine anderen Felder (id, title, date, notes) ...
+
+    @OneToMany(mappedBy = "workout", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Exercise> exercises = new ArrayList<>();
+
+    // ... deine anderen Getter und Setter ...
+
+    // DIESE METHODE FEHLT WAHRSCHEINLICH ODER HEISST ANDERS:
+    public List<Exercise> getExercises() {
+        return exercises;
+    }
+
+    public void setExercises(List<Exercise> exercises) {
+        this.exercises = exercises;
+    }
 }

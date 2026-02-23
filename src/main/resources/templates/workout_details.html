@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="de" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Workout Details</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body class="bg-light">
+
+<div class="container mt-5">
+
+    <div class="card shadow mb-4">
+        <div class="card-header bg-dark text-white d-flex justify-content-between align-items-center">
+            <h2 class="mb-0" th:text="${workout.title}">Titel</h2>
+            <span class="badge bg-secondary" th:text="${workout.date}">Datum</span>
+        </div>
+        <div class="card-body">
+            <p class="lead" th:text="${workout.notes}">Notizen...</p>
+            <a href="/" class="btn btn-outline-secondary">⬅️ Zurück zur Liste</a>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-8">
+            <div class="card shadow">
+                <div class="card-header bg-success text-white">
+                    <h4 class="mb-0">Deine Übungen</h4>
+                </div>
+                <div class="card-body">
+                    <table class="table table-hover">
+                        <thead>
+                        <tr>
+                            <th>Übung</th>
+                            <th>Sätze</th>
+                            <th>Wdh.</th>
+                            <th>Gewicht (kg)</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr th:each="ex : ${workout.exercises}">
+                            <td th:text="${ex.name}">Bankdrücken</td>
+                            <td th:text="${ex.sets}">3</td>
+                            <td th:text="${ex.reps}">8-12</td>
+                            <td th:text="${ex.weight}">80.0</td>
+                        </tr>
+                        <tr th:if="${workout.exercises.empty}">
+                            <td colspan="4" class="text-center text-muted">Noch keine Übungen eingetragen.</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card shadow">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0">➕ Übung hinzufügen</h5>
+                </div>
+                <div class="card-body">
+                    <form th:action="@{/workout/{id}/addExercise(id=${workout.id})}"
+                          th:object="${newExercise}" method="POST">
+
+                        <div class="mb-3">
+                            <label>Name</label>
+                            <input type="text" th:field="*{name}" class="form-control" placeholder="z.B. Kniebeugen" required>
+                        </div>
+                        <div class="mb-3">
+                            <label>Sätze</label>
+                            <input type="number" th:field="*{sets}" class="form-control" value="3">
+                        </div>
+                        <div class="mb-3">
+                            <label>Wdh.</label>
+                            <input type="text" th:field="*{reps}" class="form-control" placeholder="8-12">
+                        </div>
+                        <div class="mb-3">
+                            <label>Gewicht (kg)</label>
+                            <input type="number" step="0.5" th:field="*{weight}" class="form-control">
+                        </div>
+
+                        <button type="submit" class="btn btn-primary w-100">Hinzufügen</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>
